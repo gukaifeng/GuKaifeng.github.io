@@ -1,0 +1,226 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>信息标记的三种形式 | ゆうの あらしこ</title><meta name="keywords" content="XML,JSON,YAML,信息标记"><meta name="author" content="顾凯峰"><meta name="copyright" content="顾凯峰"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="1. 什么是信息标记？我们先来说，信息标记的重要性：  标记后的信息可形成信息组织结构，增加了信息维度； 标记后的信息可用于通信、存储或展示； 标记的结构与信息一样具有重要价值； 标记后的信息更利于程序理解和运用。  什么是信息标记呢？这里以HTML格式作为例子来了解什么是信息标记。 HTML：Hyper Text Markup Language，超文本标记语言。 HTML是WWW（World W">
+<meta property="og:type" content="article">
+<meta property="og:title" content="信息标记的三种形式">
+<meta property="og:url" content="https://gukaifeng.me/2020/03/07/%E4%BF%A1%E6%81%AF%E6%A0%87%E8%AE%B0%E7%9A%84%E4%B8%89%E7%A7%8D%E5%BD%A2%E5%BC%8F/index.html">
+<meta property="og:site_name" content="ゆうの あらしこ">
+<meta property="og:description" content="1. 什么是信息标记？我们先来说，信息标记的重要性：  标记后的信息可形成信息组织结构，增加了信息维度； 标记后的信息可用于通信、存储或展示； 标记的结构与信息一样具有重要价值； 标记后的信息更利于程序理解和运用。  什么是信息标记呢？这里以HTML格式作为例子来了解什么是信息标记。 HTML：Hyper Text Markup Language，超文本标记语言。 HTML是WWW（World W">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg">
+<meta property="article:published_time" content="2020-03-07T10:24:55.000Z">
+<meta property="article:modified_time" content="2020-03-18T06:08:29.748Z">
+<meta property="article:author" content="顾凯峰">
+<meta property="article:tag" content="XML">
+<meta property="article:tag" content="JSON">
+<meta property="article:tag" content="YAML">
+<meta property="article:tag" content="信息标记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://gukaifeng.me/2020/03/07/%E4%BF%A1%E6%81%AF%E6%A0%87%E8%AE%B0%E7%9A%84%E4%B8%89%E7%A7%8D%E5%BD%A2%E5%BC%8F/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}
+
+// https://stackoverflow.com/questions/16839698/jquery-getscript-alternative-in-native-javascript
+const getScript = url => new Promise((resolve, reject) => {
+  const script = document.createElement('script')
+  script.src = url
+  script.async = true
+  script.onerror = reject
+  script.onload = script.onreadystatechange = function() {
+    const loadState = this.readyState
+    if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+    script.onload = script.onreadystatechange = null
+    resolve()
+  }
+  document.head.appendChild(script)
+})</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2020-03-18 14:08:29'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/null" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">61</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">46</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div></div><hr/></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">ゆうの あらしこ</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">信息标记的三种形式</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-03-07T10:24:55.000Z" title="发表于 2020-03-07 18:24:55">2020-03-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2020-03-18T06:08:29.748Z" title="更新于 2020-03-18 14:08:29">2020-03-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BF%A1%E6%81%AF%E6%A0%87%E8%AE%B0/">信息标记</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="1-什么是信息标记？"><a href="#1-什么是信息标记？" class="headerlink" title="1. 什么是信息标记？"></a>1. 什么是信息标记？</h2><p>我们先来说，信息标记的重要性：</p>
+<ul>
+<li>标记后的信息可形成信息组织结构，增加了信息维度；</li>
+<li>标记后的信息可用于通信、存储或展示；</li>
+<li>标记的结构与信息一样具有重要价值；</li>
+<li>标记后的信息更利于程序理解和运用。</li>
+</ul>
+<p>什么是信息标记呢？这里以HTML格式作为例子来了解什么是信息标记。</p>
+<p>HTML：<strong>H</strong>yper <strong>T</strong>ext <strong>M</strong>arkup <strong>L</strong>anguage，超文本标记语言。</p>
+<p>HTML是WWW（World Wide Web）的信息组织方式。</p>
+<p>HTML能将声音、图像、视频等超文本信息嵌入到文本之中。</p>
+<p>HTML通过预定义的<code>&lt;&gt;...&lt;/&gt;</code>标签形式组织不同类型的信息，也就是通过标签标记各种信息是什么。</p>
+<p><img src="./%E4%BF%A1%E6%81%AF%E6%A0%87%E8%AE%B0%E7%9A%84%E4%B8%89%E7%A7%8D%E5%BD%A2%E5%BC%8F/img1.png" alt="信息标记的三种形式_图1"></p>
+<a id="more"></a>
+
+<p>那么信息标记有哪些种类呢？这里说的种类是指信息标记上的一般类型的种类。</p>
+<p>简单说，现在国际公认的信息标记种类有三种形式，分别是<strong>XML</strong>，<strong>JSON</strong>和<strong>YAML</strong>。</p>
+<h2 id="2-XML"><a href="#2-XML" class="headerlink" title="2. XML"></a>2. XML</h2><p>XML：e<strong>X</strong>tensible <strong>M</strong>arkup <strong>L</strong>anguage，扩展标记语言。</p>
+<p>XML是一种与HTML很接近的标记语言。从历史发展来看，先有HTML格式后有XML格式，因此可以说XML格式是基于HTML格式的发展来的一种通用信息表达形式。</p>
+<p>XML中采用以标签为主构建和表达信息的方式。</p>
+<p>如下图，在XML中有名字和属性等相关内容，这与HTML的格式非常接近。</p>
+<p><img src="./%E4%BF%A1%E6%81%AF%E6%A0%87%E8%AE%B0%E7%9A%84%E4%B8%89%E7%A7%8D%E5%BD%A2%E5%BC%8F/img2.png" alt="信息标记的三种形式_图2"></p>
+<p>如果标签中没有内容，那么可以只用一个尖括号标签来表示，标签内最后加上<code>/</code>。</p>
+<p><img src="./%E4%BF%A1%E6%81%AF%E6%A0%87%E8%AE%B0%E7%9A%84%E4%B8%89%E7%A7%8D%E5%BD%A2%E5%BC%8F/img3.png" alt="信息标记的三种形式_图3"></p>
+<p>在XML中也可以嵌入注释，注释的格式与HTML相同。</p>
+<p><img src="./%E4%BF%A1%E6%81%AF%E6%A0%87%E8%AE%B0%E7%9A%84%E4%B8%89%E7%A7%8D%E5%BD%A2%E5%BC%8F/img4.png" alt="信息标记的三种形式_图4"></p>
+<h2 id="3-JSON"><a href="#3-JSON" class="headerlink" title="3. JSON"></a>3. JSON</h2><p>JSON：<strong>J</strong>ava<strong>S</strong>cript <strong>O</strong>bject <strong>N</strong>otation，基于JavaScript语言的轻量级的数据交换格式。</p>
+<p>简单说，JSON是有类型键值对构建的信息表达方式。</p>
+<p>例如，<code>&quot;name&quot;: &quot;gukaifeng&quot;</code>，<code>&quot;age&quot;: 18</code>等等。</p>
+<p>当我们值的部分有多个信息的时候，使用<code>[,]</code>的形式组织。例如，<code>&quot;school&quot;: [&quot;清华大学&quot;, &quot;北京大学&quot;]</code></p>
+<p>键值对也可以嵌套使用，例如</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&quot;UserInfo&quot;: &#123;</span><br><span class="line">    &quot;name&quot;: &quot;gukaifeng&quot;,</span><br><span class="line">    &quot;age&quot;: 18</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>JSON格式采用有类型的键值对，一个很大的好处就是，对于JavaScript等编程语言来说，可以直接将JSON格式作为程序的一部分，大大简化程序的编写。</p>
+<h2 id="4-YAML"><a href="#4-YAML" class="headerlink" title="4. YAML"></a>4. YAML</h2><p>YAML：YAML Ain’t Markup Language。</p>
+<p>YAML是”YAML Ain’t a Markup Language”（YAML不是一种标记语言）的递归缩写。在开发的这种语言时，YAML 的意思其实是：”Yet Another Markup Language”（仍是一种标记语言），但为了强调这种语言以数据做为中心，而不是以标记语言为重点，而用反向缩略语重命名。——wikipedia</p>
+<p>YAML格式采用无类型键值对，例如<code>name: gukaifeng</code>，注意没有双引号。</p>
+<p>我们可以通过缩进的方式来表达所属关系，这个特性和Python很像，例如</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">UserInfo:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">gukaifeng</span></span><br><span class="line">  <span class="attr">age:</span> <span class="number">18</span></span><br></pre></td></tr></table></figure>
+<p>YAML使用<code>&#39;-&#39;</code>表达并列关系，例如</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span></span><br><span class="line">  <span class="string">-gukaifeng</span></span><br><span class="line">  <span class="string">-wuyanzu</span></span><br></pre></td></tr></table></figure>
+<p>YAML中还有一种很特殊的表达方式，用<code>&#39;|&#39;</code>表示整块数据，<code>&#39;#&#39;</code>表示注释。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">text:</span> <span class="string">|</span> <span class="comment"># 这个属性有一大段话</span></span><br><span class="line"><span class="string">这是一大段话！这是一大段话！这是一大段话！这是一大段话！这是一大段话！这是一大段话！</span></span><br><span class="line"><span class="string">这是一大段话！这是一大段话！这是一大段话！这是一大段话！这是一大段话！这是一大段话！</span></span><br><span class="line"><span class="string">这是一大段话！这是一大段话！这是一大段话！这是一大段话！这是一大段话！这是一大段话！</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="5-三种信息标记形式的比较"><a href="#5-三种信息标记形式的比较" class="headerlink" title="5. 三种信息标记形式的比较"></a>5. 三种信息标记形式的比较</h2><p>上面介绍了三种信息标记形式，XML、JSON和YAML。</p>
+<p>事实上，世界上的所有信息都可以通过这三种形式进行组织和标记，使得信息发挥更大的作用和价值</p>
+<p>XML是一种使用尖括号标签，标记和表达信息的形式。</p>
+<p>JSON是一种使用有类型键值对，标记和表达信息的形式。</p>
+<p>YAML是一种使用无类型键值对，标记和表达信息的形式。</p>
+<p>我们下面分别用三种信息标记形式，表达同一份信息，观察这三种形式的不同。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">person</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">firstName</span>&gt;</span>Kaifeng<span class="tag">&lt;/<span class="name">firstName</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">lastName</span>&gt;</span>Gu<span class="tag">&lt;/<span class="name">lastName</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">address</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">streetAddr</span>&gt;</span>中关村<span class="tag">&lt;/<span class="name">streetAddr</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">city</span>&gt;</span>北京<span class="tag">&lt;/<span class="name">city</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">zipcode</span>&gt;</span>100080<span class="tag">&lt;/<span class="name">zipcode</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">address</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">prof</span>&gt;</span>Computer System<span class="tag">&lt;/<span class="name">prof</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">prof</span>&gt;</span>Security<span class="tag">&lt;/<span class="name">prof</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">person</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;firstName&quot;</span>: <span class="string">&quot;Kaifeng&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;lastName&quot;</span>: <span class="string">&quot;Gu&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;address&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;streetAddr&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;city&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;zipcode&quot;</span>: <span class="string">&quot;100080&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;prof&quot;</span>: [<span class="string">&quot;Computer System&quot;</span>, <span class="string">&quot;Security&quot;</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">firstName:</span> <span class="string">Kaifeng</span></span><br><span class="line"><span class="attr">lastName:</span> <span class="string">Gu</span></span><br><span class="line"><span class="attr">address:</span></span><br><span class="line">  <span class="attr">streetAddr:</span> <span class="string">中关村</span></span><br><span class="line">  <span class="attr">city:</span> <span class="string">北京</span></span><br><span class="line">  <span class="attr">zipcode:</span> <span class="number">100080</span></span><br><span class="line"><span class="attr">prof:</span> </span><br><span class="line">  <span class="string">-Computer</span> <span class="string">System</span> </span><br><span class="line">  <span class="string">-Security</span></span><br></pre></td></tr></table></figure>
+<p>三种形式的代码风格比较：<br/><strong>XML</strong>：最早的通用信息标记语言，可扩展性好，但繁琐。<br/><strong>JSON</strong>：信息有类型，适合程序处理（js），叫XML简洁。<br/><strong>YAML</strong>：信息无类型，文本信息比例最高，可读性好。</p>
+<p>三种形式的应用场景比较：<br/><strong>XML</strong>：Internet上的信息交互与传递以及信息表达主要采用XML格式，包括HTML也是和XML同类别的。<br/><strong>JSON</strong>：移动应用云端和结点的信息通信，无注释。一般来讲，JSON格式用在程序对接口处理的地方，JSON数据在经过传输之后，能够作为程序代码的一部分被程序直接运行，这样JSON格式中对信息类型的定义才能最大的发挥作用，这是JSON格式最大的价值。然而，JSON格式有一个比较大的缺陷，就是其中无法写注释<br/><strong>YAML</strong>：各类系统的配置文件，有注释易读。<br/></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">顾凯峰</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://gukaifeng.me/2020/03/07/%E4%BF%A1%E6%81%AF%E6%A0%87%E8%AE%B0%E7%9A%84%E4%B8%89%E7%A7%8D%E5%BD%A2%E5%BC%8F/">https://gukaifeng.me/2020/03/07/%E4%BF%A1%E6%81%AF%E6%A0%87%E8%AE%B0%E7%9A%84%E4%B8%89%E7%A7%8D%E5%BD%A2%E5%BC%8F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://gukaifeng.me" target="_blank">ゆうの あらしこ</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/XML/">XML</a><a class="post-meta__tags" href="/tags/JSON/">JSON</a><a class="post-meta__tags" href="/tags/YAML/">YAML</a><a class="post-meta__tags" href="/tags/%E4%BF%A1%E6%81%AF%E6%A0%87%E8%AE%B0/">信息标记</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/03/08/%E4%BF%A1%E6%81%AF%E6%8F%90%E5%8F%96%E7%9A%84%E4%B8%80%E8%88%AC%E6%96%B9%E6%B3%95/"><img class="prev-cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">信息提取的一般方法</div></div></a></div><div class="next-post pull-right"><a href="/2020/03/07/%E5%9F%BA%E4%BA%8Ebs4%E5%BA%93%E7%9A%84HTML%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%92%8C%E7%BC%96%E7%A0%81/"><img class="next-cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">基于bs4库的HTML格式输出和编码</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/03/08/信息提取的一般方法/" title="信息提取的一般方法"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-08</div><div class="title">信息提取的一般方法</div></div></a></div></div></div></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/null" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">顾凯峰</div><div class="author-info__description">行有不得，反求诸己。</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">61</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">46</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E4%BF%A1%E6%81%AF%E6%A0%87%E8%AE%B0%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">1. 什么是信息标记？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-XML"><span class="toc-number">2.</span> <span class="toc-text">2. XML</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-JSON"><span class="toc-number">3.</span> <span class="toc-text">3. JSON</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-YAML"><span class="toc-number">4.</span> <span class="toc-text">4. YAML</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E4%B8%89%E7%A7%8D%E4%BF%A1%E6%81%AF%E6%A0%87%E8%AE%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-number">5.</span> <span class="toc-text">5. 三种信息标记形式的比较</span></a></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2020/04/05/MacOS%E4%B8%8A%E7%9A%84%E5%AE%9E%E7%94%A8%E5%B0%8F%E5%B7%A5%E5%85%B7/" title="MacOS上的实用小工具"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MacOS上的实用小工具"/></a><div class="content"><a class="title" href="/2020/04/05/MacOS%E4%B8%8A%E7%9A%84%E5%AE%9E%E7%94%A8%E5%B0%8F%E5%B7%A5%E5%85%B7/" title="MacOS上的实用小工具">MacOS上的实用小工具</a><time datetime="2020-04-05T14:41:29.000Z" title="发表于 2020-04-05 22:41:29">2020-04-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/03/25/Leetcode%E6%80%9D%E8%B7%AF%E7%AC%94%E8%AE%B0/" title="Leetcode思路笔记"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Leetcode思路笔记"/></a><div class="content"><a class="title" href="/2020/03/25/Leetcode%E6%80%9D%E8%B7%AF%E7%AC%94%E8%AE%B0/" title="Leetcode思路笔记">Leetcode思路笔记</a><time datetime="2020-03-24T16:01:20.000Z" title="发表于 2020-03-25 00:01:20">2020-03-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/03/21/Java%E4%B8%ADfor%E5%BE%AA%E7%8E%AF%E5%86%85%E7%9A%84-i%E4%B8%8Ei-%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94/" title="Java中for循环内的++i与i++性能对比"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java中for循环内的++i与i++性能对比"/></a><div class="content"><a class="title" href="/2020/03/21/Java%E4%B8%ADfor%E5%BE%AA%E7%8E%AF%E5%86%85%E7%9A%84-i%E4%B8%8Ei-%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94/" title="Java中for循环内的++i与i++性能对比">Java中for循环内的++i与i++性能对比</a><time datetime="2020-03-21T13:43:30.000Z" title="发表于 2020-03-21 21:43:30">2020-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/03/21/Java-JCF%E4%B8%AD%E7%9A%84%E5%B7%A5%E5%85%B7%E7%B1%BB/" title="Java JCF中的工具类"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java JCF中的工具类"/></a><div class="content"><a class="title" href="/2020/03/21/Java-JCF%E4%B8%AD%E7%9A%84%E5%B7%A5%E5%85%B7%E7%B1%BB/" title="Java JCF中的工具类">Java JCF中的工具类</a><time datetime="2020-03-21T06:48:33.000Z" title="发表于 2020-03-21 14:48:33">2020-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/03/20/Java%E6%98%A0%E5%B0%84Map%E7%B1%BB/" title="Java映射Map类"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java映射Map类"/></a><div class="content"><a class="title" href="/2020/03/20/Java%E6%98%A0%E5%B0%84Map%E7%B1%BB/" title="Java映射Map类">Java映射Map类</a><time datetime="2020-03-20T11:17:22.000Z" title="发表于 2020-03-20 19:17:22">2020-03-20</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 By 顾凯峰</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

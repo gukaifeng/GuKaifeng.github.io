@@ -1,0 +1,535 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Python中的正则表达式和Re库 | ゆうの あらしこ</title><meta name="keywords" content="Python,Re,正则表达式"><meta name="author" content="顾凯峰"><meta name="copyright" content="顾凯峰"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="1. 正则表达式的概念正则表达式：regular expression，regex，RE。 正则表达式是用来简洁表达一组字符串的表达式。 如有一组字符串如下： 12345&amp;#x27;PN&amp;#x27;&amp;#x27;PYN&amp;#x27;&amp;#x27;PYTM&amp;#x27;&amp;#x27;PTRHN&amp;#x27;&amp;#x27;PYTHON&amp;#x27; 这组字符串可以用正则表达式简洁的表示：&#39;P(Y|YT|YTH">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python中的正则表达式和Re库">
+<meta property="og:url" content="https://gukaifeng.me/2020/03/08/Python%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%92%8CRe%E5%BA%93/index.html">
+<meta property="og:site_name" content="ゆうの あらしこ">
+<meta property="og:description" content="1. 正则表达式的概念正则表达式：regular expression，regex，RE。 正则表达式是用来简洁表达一组字符串的表达式。 如有一组字符串如下： 12345&amp;#x27;PN&amp;#x27;&amp;#x27;PYN&amp;#x27;&amp;#x27;PYTM&amp;#x27;&amp;#x27;PTRHN&amp;#x27;&amp;#x27;PYTHON&amp;#x27; 这组字符串可以用正则表达式简洁的表示：&#39;P(Y|YT|YTH">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg">
+<meta property="article:published_time" content="2020-03-08T08:05:51.000Z">
+<meta property="article:modified_time" content="2020-03-18T05:34:35.215Z">
+<meta property="article:author" content="顾凯峰">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Re">
+<meta property="article:tag" content="正则表达式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://gukaifeng.me/2020/03/08/Python%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%92%8CRe%E5%BA%93/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}
+
+// https://stackoverflow.com/questions/16839698/jquery-getscript-alternative-in-native-javascript
+const getScript = url => new Promise((resolve, reject) => {
+  const script = document.createElement('script')
+  script.src = url
+  script.async = true
+  script.onerror = reject
+  script.onload = script.onreadystatechange = function() {
+    const loadState = this.readyState
+    if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+    script.onload = script.onreadystatechange = null
+    resolve()
+  }
+  document.head.appendChild(script)
+})</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2020-03-18 13:34:35'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/null" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">61</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">46</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div></div><hr/></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">ゆうの あらしこ</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Python中的正则表达式和Re库</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-03-08T08:05:51.000Z" title="发表于 2020-03-08 16:05:51">2020-03-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2020-03-18T05:34:35.215Z" title="更新于 2020-03-18 13:34:35">2020-03-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Python/">Python</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="1-正则表达式的概念"><a href="#1-正则表达式的概念" class="headerlink" title="1. 正则表达式的概念"></a>1. 正则表达式的概念</h2><p>正则表达式：<strong>r</strong>egular <strong>e</strong>xpression，regex，RE。</p>
+<p>正则表达式是用来简洁表达一组字符串的表达式。</p>
+<p>如有一组字符串如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;PN&#x27;</span></span><br><span class="line"><span class="string">&#x27;PYN&#x27;</span></span><br><span class="line"><span class="string">&#x27;PYTM&#x27;</span></span><br><span class="line"><span class="string">&#x27;PTRHN&#x27;</span></span><br><span class="line"><span class="string">&#x27;PYTHON&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>这组字符串可以用正则表达式简洁的表示：<code>&#39;P(Y|YT|YTH|YTHO)?N&#39;</code></p>
+<p>再有一组字符串如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;PY&#x27;</span></span><br><span class="line"><span class="string">&#x27;PYY&#x27;</span></span><br><span class="line"><span class="string">&#x27;PYYY&#x27;</span></span><br><span class="line">...</span><br><span class="line"><span class="string">&#x27;PYYYY...&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>这组字符串可以用正则表达式简洁的表示：<code>&#39;PY+&#39;</code>，<code>&#39;+&#39;</code>表示Y可以有1个或无穷多个。</p>
+<a id="more"></a>
+
+<p>总得来说，正则表达式具有以下特点：<br/>1. 通用的字符串表达框架。<br/>2. 简洁表达一组字符串的表达式。<br/>3. 针对字符串表达”简洁“和”特征“思想的工具。<br/>4. 判断某字符串的特征归属。</p>
+<p>正则表达式在文本处理中十分常用，他可以：<br/>1. 表达文本类型的特征（病毒、入侵等）。<br/>2. 同时查找或替换一组字符串。<br/>3. 匹配字符串的全部或部分。</p>
+<p>正则表达式的使用：<br/>编译：将符合正则表达式语法的字符串转换成正则表达式特征。如<code>p=re.compile(regex)</code>。<br/></p>
+<h2 id="2-正则表达式的语法"><a href="#2-正则表达式的语法" class="headerlink" title="2. 正则表达式的语法"></a>2. 正则表达式的语法</h2><p>正则表达式语法由字符和操作符构成。</p>
+<p>正则表达式的常用操作符有下面这些：</p>
+<table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>说明</th>
+<th>实例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.</code></td>
+<td>表示任何单个字符，默认不包括换行符。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>[]</code></td>
+<td>字符集，对单个字符给出取值范围。</td>
+<td><code>[abc]</code>表示a、b、c，<br/><code>[a-z]</code>表示a到z的单个字符。</td>
+</tr>
+<tr>
+<td><code>[^ ]</code></td>
+<td>非字符集，对单个字符给出排除范围。</td>
+<td><code>[^abc]</code>表示非a非b非c的单个字符。</td>
+</tr>
+<tr>
+<td><code>*</code></td>
+<td>前一个字符0次或无限次扩展。</td>
+<td><code>abc*</code>表示ab、abc、abcc等。</td>
+</tr>
+<tr>
+<td><code>+</code></td>
+<td>前一个字符1次或无限次扩展。</td>
+<td><code>abc+</code>表示abc、abcc、abccc等。</td>
+</tr>
+<tr>
+<td><code>?</code></td>
+<td>前一个字符0次或1次扩展。</td>
+<td><code>ab?</code>表示ab、abc。</td>
+</tr>
+<tr>
+<td><code>&#124;</code></td>
+<td>左右表达式任意一个。</td>
+<td><code>abc&#124;def</code>表示abc、def。</td>
+</tr>
+<tr>
+<td><code>&#123;m&#125;</code></td>
+<td>扩展前一个字符m次。</td>
+<td><code>ab&#123;2&#125;c</code>表示abbc。</td>
+</tr>
+<tr>
+<td><code>&#123;m,n&#125;</code></td>
+<td>扩展前一个字符m至n次（含n）。</td>
+<td><code>ab&#123;1,2&#125;c</code>表示abc、abbc。</td>
+</tr>
+<tr>
+<td><code>^</code></td>
+<td>匹配字符串开头。</td>
+<td><code>^abc</code>表示以abc开头的字符串。</td>
+</tr>
+<tr>
+<td><code>$</code></td>
+<td>匹配字符串结尾。</td>
+<td><code>abc$</code>表示以abc结尾的字符串。</td>
+</tr>
+<tr>
+<td><code>()</code></td>
+<td>分组标记，内部只能使用<code>&#124;</code>操作符。</td>
+<td><code>(abc)</code>表示abc，<br/><code>(abc&#124;def)</code>表示abc、def。</td>
+</tr>
+<tr>
+<td><code>\d</code></td>
+<td>数字，等价于<code>[0-9]</code>。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>\w</code></td>
+<td>单词字符，等价于<code>[A-Za-z0-9]</code>。</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>经典正则表达式实例：</p>
+<table>
+<thead>
+<tr>
+<th>实例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>^[A-Za-z]+$</code></td>
+<td>由26个字母组成的字符串。</td>
+</tr>
+<tr>
+<td><code>^[A-Za-z0-9]+$</code></td>
+<td>由26个字母和数字组成的字符串。</td>
+</tr>
+<tr>
+<td><code>^-?\d+$</code></td>
+<td>整数形式的字符串。</td>
+</tr>
+<tr>
+<td><code>^[0-9]*[1-9][0-9]*$</code></td>
+<td>正整数形式的字符串。</td>
+</tr>
+<tr>
+<td><code>[1-9]\d&#123;5&#125;</code></td>
+<td>中国境内邮政编码，6位。</td>
+</tr>
+<tr>
+<td><code>[\u4e00-\u9fa5]</code></td>
+<td>匹配中文字符。</td>
+</tr>
+<tr>
+<td><code>\d&#123;3&#125;-\d&#123;8&#125;&#124;\d&#123;4&#125;-\d&#123;7&#125;</code></td>
+<td>国内电话号码，010-68913536。</td>
+</tr>
+</tbody></table>
+<p>我们练习一下，如何写一个匹配IP地址的正则表达式。</p>
+<p>IP地址分4段，每段0-255。</p>
+<p>0-255的这个范围其实很难表示，因为这不是一个整齐的范围，我们采用分段的方式，有如下。</p>
+<table>
+<thead>
+<tr>
+<th>范围</th>
+<th>正则表达式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0-99</td>
+<td><code>[1-9]?\d</code></td>
+</tr>
+<tr>
+<td>100-199</td>
+<td><code>1\d&#123;2&#125;</code></td>
+</tr>
+<tr>
+<td>200-249</td>
+<td><code>2[0-4]\d</code></td>
+</tr>
+<tr>
+<td>250-255</td>
+<td><code>25[0-5]</code></td>
+</tr>
+</tbody></table>
+<p>我们可以采用<code>|</code>和<code>()</code>将上面几个范围组合起来，构成匹配IP地址的正则表达式。</p>
+<p><code>(([1-9]?\d|1\d&#123;2&#125;|2[0-4]\d|25[0-5]).)&#123;3&#125;([1-9]?\d|1\d&#123;2&#125;|2[0-4]\d|25[0-5])</code></p>
+<h2 id="3-Re库"><a href="#3-Re库" class="headerlink" title="3. Re库"></a>3. Re库</h2><p>Re库是Python的标准库，主要用于字符串匹配。</p>
+<p>调用方式<code>import re</code>。</p>
+<p>RE库使用<code>raw string</code>类型（原生字符串类型）来表达正则表达式，表示为<code>r&#39;text&#39;</code>。</p>
+<p>raw string 是不包含转义字符的字符串。如<code>r&#39;[1-9]\d&#123;5&#125;&#39;</code>。</p>
+<p>正则表达式也可以使用普通的String类型来表示，但是过于繁琐，不推荐。</p>
+<h3 id="3-1-Re库主要功能函数"><a href="#3-1-Re库主要功能函数" class="headerlink" title="3.1. Re库主要功能函数"></a>3.1. Re库主要功能函数</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>re.search()</td>
+<td>在一个字符串中搜索匹配正则表达式的第一个位置，返回match对象。</td>
+</tr>
+<tr>
+<td>re.match()</td>
+<td>在一个字符串的开始位置起匹配正则表达式，返回match对象。</td>
+</tr>
+<tr>
+<td>re.findall()</td>
+<td>搜索字符串，以列表类型返回全部能匹配的子串。</td>
+</tr>
+<tr>
+<td>re.split()</td>
+<td>将一个字符串按照正则表达式匹配结果进行分割，返回列表类型。</td>
+</tr>
+<tr>
+<td>re.finditer()</td>
+<td>搜索字符串，返回一个匹配结果的迭代类型，每个迭代元素是match对象。</td>
+</tr>
+<tr>
+<td>re.sub()</td>
+<td>在一个字符串中替换所有匹配正则表达式的子串，返回替换后的字符串。</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p><code>re.search(pattern, string, flags=0)</code></p>
+<p>  <code>pattern</code>：正则表达式的字符串或原生字符串。</p>
+<p>  <code>string</code>：待匹配字符串。</p>
+<p>  <code>flags</code>：正则表达式使用时的控制标记。</p>
+<table>
+<thead>
+<tr>
+<th>常用标记</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>re.I = re.IGNORECASE</td>
+<td>忽略正则表达式的大小写，[A-Z]能够匹配小写字符。</td>
+</tr>
+<tr>
+<td>re.M = re.MULTILINE</td>
+<td>正则表达式中的<code>^</code>操作符能够将给定字符串的每行当做匹配开始。</td>
+</tr>
+<tr>
+<td>re.S = re.DOTALL</td>
+<td>正则表达式中的<code>.</code>操作符能够匹配所有字符。默认匹配除换行符以外的所有字符，设置re.S后才可以匹配换行符。</td>
+</tr>
+</tbody></table>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> re</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>match = re.search(<span class="string">r&#x27;[1-9]\d&#123;5&#125;&#x27;</span>, <span class="string">&#x27;BIT 100080&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">if</span> match:</span><br><span class="line"><span class="meta">... </span>    print(match.group(<span class="number">0</span>))</span><br><span class="line"><span class="meta">... </span></span><br><span class="line"><span class="number">100080</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>re.match(pattern, string, flags=0)</code></p>
+<p>  <code>pattern</code>：正则表达式的字符串或原生字符串。</p>
+<p>  <code>string</code>：待匹配字符串。</p>
+<p>  <code>flags</code>：正则表达式使用时的控制标记。</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>match = re.match(<span class="string">r&#x27;[1-9]\d&#123;5&#125;&#x27;</span>, <span class="string">&#x27;BIT 100080&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">if</span> match:</span><br><span class="line"><span class="meta">... </span>    print(match.group(<span class="number">0</span>))</span><br><span class="line"><span class="meta">... </span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>match.group(<span class="number">0</span>)</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;&lt;stdin&gt;&quot;</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">AttributeError: <span class="string">&#x27;NoneType&#x27;</span> <span class="built_in">object</span> has no attribute <span class="string">&#x27;group&#x27;</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>match = re.match(<span class="string">r&#x27;[1-9]\d&#123;5&#125;&#x27;</span>, <span class="string">&#x27;100080 BIT&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">if</span> match:</span><br><span class="line"><span class="meta">... </span>    print(match.group(<span class="number">0</span>))</span><br><span class="line"><span class="meta">... </span></span><br><span class="line"><span class="number">100080</span></span><br></pre></td></tr></table></figure>
+<p>  re.match()从待匹配字符串开始处开始匹配。</p>
+<p>  因为有可能匹配结果为空，所以我们在使用结果前要先判断一下结果集是不是空的。</p>
+</li>
+<li><p><code>re.findall(pattern, string, flags=0)</code></p>
+<p>  <code>pattern</code>：正则表达式的字符串或原生字符串。</p>
+<p>  <code>string</code>：待匹配字符串。</p>
+<p>  <code>flags</code>：正则表达式使用时的控制标记。</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>ls = re.findall(<span class="string">r&#x27;[1-9]\d&#123;5&#125;&#x27;</span>, <span class="string">&#x27;BIT100080 TSU100084&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>ls</span><br><span class="line">[<span class="string">&#x27;100080&#x27;</span>, <span class="string">&#x27;100084&#x27;</span>]</span><br></pre></td></tr></table></figure></li>
+<li><p><code>re.split(pattern, string, maxsplit=0, flags=0)</code></p>
+<p>  <code>pattern</code>：正则表达式的字符串或原生字符串。</p>
+<p>  <code>string</code>：待匹配字符串。</p>
+<p>  <code>maxsplit</code>：最大分割数，剩余部分作为最后一个元素输出。</p>
+<p>  <code>flags</code>：正则表达式使用时的控制标记。</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>re.split(<span class="string">r&#x27;[1-9]\d&#123;5&#125;&#x27;</span>, <span class="string">&#x27;BIT100080 TSU100084&#x27;</span>)</span><br><span class="line">[<span class="string">&#x27;BIT&#x27;</span>, <span class="string">&#x27; TSU&#x27;</span>, <span class="string">&#x27;&#x27;</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>re.split(<span class="string">r&#x27;[1-9]\d&#123;5&#125;&#x27;</span>, <span class="string">&#x27;BIT100080 TSU100084&#x27;</span>, maxsplit=<span class="number">1</span>)</span><br><span class="line">[<span class="string">&#x27;BIT&#x27;</span>, <span class="string">&#x27; TSU100084&#x27;</span>]</span><br></pre></td></tr></table></figure></li>
+<li><p><code>re.finditer(pattern, string, flags=0)</code></p>
+<p>  <code>pattern</code>：正则表达式的字符串或原生字符串。</p>
+<p>  <code>string</code>：待匹配字符串。</p>
+<p>  <code>flags</code>：正则表达式使用时的控制标记。</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> m <span class="keyword">in</span> re.finditer(<span class="string">r&#x27;[1-9]\d&#123;5&#125;&#x27;</span>, <span class="string">&#x27;BIT100080 TSU100084&#x27;</span>):</span><br><span class="line"><span class="meta">... </span>    <span class="keyword">if</span> m:</span><br><span class="line"><span class="meta">... </span>            print(m.group(<span class="number">0</span>))</span><br><span class="line"><span class="meta">... </span></span><br><span class="line"><span class="number">100080</span></span><br><span class="line"><span class="number">100084</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>re.sub(pattern, repl, string, count=0, flags=0)</code></p>
+<p>  <code>pattern</code>：正则表达式的字符串或原生字符串。</p>
+<p>  <code>repl</code>：替换匹配字符串的字符串。</p>
+<p>  <code>string</code>：待匹配字符串。</p>
+<p>  <code>count</code>：匹配的最大替换次数。</p>
+<p>  <code>flags</code>：正则表达式使用时的控制标记。</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>re.sub(<span class="string">r&#x27;[1-9]\d&#123;5&#125;&#x27;</span>, <span class="string">&#x27;:zipcode&#x27;</span>, <span class="string">&#x27;BIT100080 TSU100084&#x27;</span>)</span><br><span class="line"><span class="string">&#x27;BIT:zipcode TSU:zipcode&#x27;</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>re.sub(<span class="string">r&#x27;[1-9]\d&#123;5&#125;&#x27;</span>, <span class="string">&#x27;:zipcode&#x27;</span>, <span class="string">&#x27;BIT100080 TSU100084&#x27;</span>, count=<span class="number">1</span>)</span><br><span class="line"><span class="string">&#x27;BIT:zipcode TSU100084&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h4 id="3-1-1-Re库的另一种等价用法"><a href="#3-1-1-Re库的另一种等价用法" class="headerlink" title="3.1.1. Re库的另一种等价用法"></a>3.1.1. Re库的另一种等价用法</h4><p>Re库有两种常用的调用方法，分别是函数式用法和面向对象用法。</p>
+<ul>
+<li><p>函数式用法：一次性操作。</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rst = re.search(<span class="string">r&#x27;[1-9]\d&#123;5&#125;&#x27;</span>, <span class="string">&#x27;BIT 100081&#x27;</span>)</span><br></pre></td></tr></table></figure></li>
+<li><p>面向对象用法：编译后的多次操作，可以调用上述的6种方法。</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pat = re.<span class="built_in">compile</span>(<span class="string">r&#x27;[1-9]\d&#123;5&#125;&#x27;</span>)</span><br><span class="line">rsr = pat.search(<span class="string">&#x27;BIT 100081&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h4 id="3-1-2-re-compile-函数"><a href="#3-1-2-re-compile-函数" class="headerlink" title="3.1.2. re.compile()函数"></a>3.1.2. re.compile()函数</h4><p><code>re.compile()</code>：将正则表达式的字符穿形式编译成正则表达式对象。</p>
+<p><code>pattern</code>：正则表达式的字符串或原生字符串表示。</p>
+<p><code>flags</code>：正则表达式使用时的控制标记。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">regex = re.<span class="built_in">compile</span>(<span class="string">r&#x27;[1-9]\d&#123;5&#125;&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>需要注意的是，不论是正则表达式的字符串，还是原生字符串，都只是一个字符串。只有编译后，才是一个正则表达式对象，可以代表一组字符串。</p>
+<p>regex对象也具有上述的6种方法。</p>
+<p>区别在于，regext没有正则表达式参数，因为他已经用正则表达式编译过了。</p>
+<h3 id="3-2-Re库的Match对象"><a href="#3-2-Re库的Match对象" class="headerlink" title="3.2. Re库的Match对象"></a>3.2. Re库的Match对象</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>match = re.search(<span class="string">r&#x27;[1-9]\d&#123;5&#125;&#x27;</span>, <span class="string">&#x27;BIT 100080&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">if</span> match:</span><br><span class="line"><span class="meta">... </span>    print(match.group(<span class="number">0</span>))</span><br><span class="line"><span class="meta">... </span></span><br><span class="line"><span class="number">100080</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">type</span>(match)</span><br><span class="line">&lt;<span class="class"><span class="keyword">class</span> &#x27;<span class="title">re</span>.<span class="title">Match</span>&#x27;&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>Match对象的属性</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>.string</td>
+<td>待匹配的文本。</td>
+</tr>
+<tr>
+<td>.re</td>
+<td>匹配时使用的pattern对象。</td>
+</tr>
+<tr>
+<td>.pos</td>
+<td>正则表达式搜索文本的开始位置。</td>
+</tr>
+<tr>
+<td>.endpos</td>
+<td>正则表达式搜索文本的结束位置。</td>
+</tr>
+</tbody></table>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>match.string</span><br><span class="line"><span class="string">&#x27;BIT 100080&#x27;</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>match.re</span><br><span class="line">re.<span class="built_in">compile</span>(<span class="string">&#x27;[1-9]\\d&#123;5&#125;&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>match.pos</span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>match.endpos</span><br><span class="line"><span class="number">10</span></span><br></pre></td></tr></table></figure></li>
+<li><p>Match对象的方法</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>.group(0)</td>
+<td>获得匹配后的字符串，常用group(0)。</td>
+</tr>
+<tr>
+<td>.start()</td>
+<td>匹配字符串在原始字符串的开始位置。</td>
+</tr>
+<tr>
+<td>.end()</td>
+<td>匹配字符串在原始字符串的结束位置。</td>
+</tr>
+<tr>
+<td>.span()</td>
+<td>返回(.start(), .end())</td>
+</tr>
+</tbody></table>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>match.group(<span class="number">0</span>)</span><br><span class="line"><span class="string">&#x27;100080&#x27;</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>match.start()</span><br><span class="line"><span class="number">4</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>match.end()</span><br><span class="line"><span class="number">10</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>match.span()</span><br><span class="line">(<span class="number">4</span>, <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h3 id="3-1-3-Re库的贪婪匹配和最小匹配"><a href="#3-1-3-Re库的贪婪匹配和最小匹配" class="headerlink" title="3.1.3. Re库的贪婪匹配和最小匹配"></a>3.1.3. Re库的贪婪匹配和最小匹配</h3><p><img src="./Python%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%92%8CRe%E5%BA%93/img1.png" alt="Python中的正则表达式和Re库_图1"></p>
+<p>我们看上面的实例，我们的正则表达式匹配有多个可能的结果。</p>
+<p>同时匹配长短不同的多项，那么返回的是哪一个呢？</p>
+<p>Re库默认采用<strong>贪婪匹配</strong>，即<strong>输出匹配最长的子串</strong>，即结果为<code>PYANBNCNDN</code>。</p>
+<p>如果想要采用<strong>最小匹配</strong>，即输出匹配最短的子串，即结果为<code>PYAN</code>，需要在其中加一个<code>?</code>，位置如图。</p>
+<p><img src="./Python%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%92%8CRe%E5%BA%93/img2.png" alt="Python中的正则表达式和Re库_图2"></p>
+<p>当有操作符可以匹配不同长度的时候，我们都可以才其后面加上<code>?</code>实现最小匹配。</p>
+<p>下面是关于最小匹配的一些例子。</p>
+<table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>*?</code></td>
+<td>前一个字符0次或无限次扩展。最小匹配。</td>
+</tr>
+<tr>
+<td><code>+?</code></td>
+<td>前一个字符1次或无限次扩展。最小匹配。</td>
+</tr>
+<tr>
+<td><code>??</code></td>
+<td>前一个字符0次或1次扩展。最小匹配。</td>
+</tr>
+<tr>
+<td><code>&#123;m,n&#125;?</code></td>
+<td>扩展前一个字符m至n次（含n）。最小匹配。</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">顾凯峰</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://gukaifeng.me/2020/03/08/Python%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%92%8CRe%E5%BA%93/">https://gukaifeng.me/2020/03/08/Python%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%92%8CRe%E5%BA%93/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://gukaifeng.me" target="_blank">ゆうの あらしこ</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Python/">Python</a><a class="post-meta__tags" href="/tags/Re/">Re</a><a class="post-meta__tags" href="/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/03/14/Scrapy%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6%E5%85%A5%E9%97%A8/"><img class="prev-cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Scrapy爬虫框架入门</div></div></a></div><div class="next-post pull-right"><a href="/2020/03/08/%E4%B8%AD%E5%9B%BD%E5%A4%A7%E5%AD%A6%E6%8E%92%E5%90%8D%E5%AE%9A%E5%90%91%E7%88%AC%E8%99%AB/"><img class="next-cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">中国大学排名定向爬虫</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/03/08/中国大学排名定向爬虫/" title="中国大学排名定向爬虫"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-08</div><div class="title">中国大学排名定向爬虫</div></div></a></div><div><a href="/2020/03/05/Requests库入门/" title="Requests库入门"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-05</div><div class="title">Requests库入门</div></div></a></div><div><a href="/2020/03/05/Requests库爬取实例/" title="Requests库爬取实例"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-05</div><div class="title">Requests库爬取实例</div></div></a></div><div><a href="/2020/03/15/Python中yield关键字的使用/" title="Python中yield关键字的使用"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-15</div><div class="title">Python中yield关键字的使用</div></div></a></div><div><a href="/2020/03/07/基于bs4库的HTML格式化和编码/" title="基于bs4库的HTML格式输出和编码"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-07</div><div class="title">基于bs4库的HTML格式输出和编码</div></div></a></div><div><a href="/2020/03/07/BeautifulSoup库入门/" title="BeautifulSoup库入门"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-07</div><div class="title">BeautifulSoup库入门</div></div></a></div></div></div></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/null" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">顾凯峰</div><div class="author-info__description">行有不得，反求诸己。</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">61</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">46</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">1. 正则表达式的概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E8%AF%AD%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">2. 正则表达式的语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Re%E5%BA%93"><span class="toc-number">3.</span> <span class="toc-text">3. Re库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-Re%E5%BA%93%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD%E5%87%BD%E6%95%B0"><span class="toc-number">3.1.</span> <span class="toc-text">3.1. Re库主要功能函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-1-Re%E5%BA%93%E7%9A%84%E5%8F%A6%E4%B8%80%E7%A7%8D%E7%AD%89%E4%BB%B7%E7%94%A8%E6%B3%95"><span class="toc-number">3.1.1.</span> <span class="toc-text">3.1.1. Re库的另一种等价用法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-2-re-compile-%E5%87%BD%E6%95%B0"><span class="toc-number">3.1.2.</span> <span class="toc-text">3.1.2. re.compile()函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-Re%E5%BA%93%E7%9A%84Match%E5%AF%B9%E8%B1%A1"><span class="toc-number">3.2.</span> <span class="toc-text">3.2. Re库的Match对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-3-Re%E5%BA%93%E7%9A%84%E8%B4%AA%E5%A9%AA%E5%8C%B9%E9%85%8D%E5%92%8C%E6%9C%80%E5%B0%8F%E5%8C%B9%E9%85%8D"><span class="toc-number">3.3.</span> <span class="toc-text">3.1.3. Re库的贪婪匹配和最小匹配</span></a></li></ol></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2020/04/05/MacOS%E4%B8%8A%E7%9A%84%E5%AE%9E%E7%94%A8%E5%B0%8F%E5%B7%A5%E5%85%B7/" title="MacOS上的实用小工具"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MacOS上的实用小工具"/></a><div class="content"><a class="title" href="/2020/04/05/MacOS%E4%B8%8A%E7%9A%84%E5%AE%9E%E7%94%A8%E5%B0%8F%E5%B7%A5%E5%85%B7/" title="MacOS上的实用小工具">MacOS上的实用小工具</a><time datetime="2020-04-05T14:41:29.000Z" title="发表于 2020-04-05 22:41:29">2020-04-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/03/25/Leetcode%E6%80%9D%E8%B7%AF%E7%AC%94%E8%AE%B0/" title="Leetcode思路笔记"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Leetcode思路笔记"/></a><div class="content"><a class="title" href="/2020/03/25/Leetcode%E6%80%9D%E8%B7%AF%E7%AC%94%E8%AE%B0/" title="Leetcode思路笔记">Leetcode思路笔记</a><time datetime="2020-03-24T16:01:20.000Z" title="发表于 2020-03-25 00:01:20">2020-03-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/03/21/Java%E4%B8%ADfor%E5%BE%AA%E7%8E%AF%E5%86%85%E7%9A%84-i%E4%B8%8Ei-%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94/" title="Java中for循环内的++i与i++性能对比"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java中for循环内的++i与i++性能对比"/></a><div class="content"><a class="title" href="/2020/03/21/Java%E4%B8%ADfor%E5%BE%AA%E7%8E%AF%E5%86%85%E7%9A%84-i%E4%B8%8Ei-%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94/" title="Java中for循环内的++i与i++性能对比">Java中for循环内的++i与i++性能对比</a><time datetime="2020-03-21T13:43:30.000Z" title="发表于 2020-03-21 21:43:30">2020-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/03/21/Java-JCF%E4%B8%AD%E7%9A%84%E5%B7%A5%E5%85%B7%E7%B1%BB/" title="Java JCF中的工具类"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java JCF中的工具类"/></a><div class="content"><a class="title" href="/2020/03/21/Java-JCF%E4%B8%AD%E7%9A%84%E5%B7%A5%E5%85%B7%E7%B1%BB/" title="Java JCF中的工具类">Java JCF中的工具类</a><time datetime="2020-03-21T06:48:33.000Z" title="发表于 2020-03-21 14:48:33">2020-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/03/20/Java%E6%98%A0%E5%B0%84Map%E7%B1%BB/" title="Java映射Map类"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java映射Map类"/></a><div class="content"><a class="title" href="/2020/03/20/Java%E6%98%A0%E5%B0%84Map%E7%B1%BB/" title="Java映射Map类">Java映射Map类</a><time datetime="2020-03-20T11:17:22.000Z" title="发表于 2020-03-20 19:17:22">2020-03-20</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 By 顾凯峰</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

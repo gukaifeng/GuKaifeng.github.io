@@ -1,0 +1,243 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>网络爬虫的盗亦有道 | ゆうの あらしこ</title><meta name="keywords" content="爬虫"><meta name="author" content="顾凯峰"><meta name="copyright" content="顾凯峰"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="1. 网络爬虫的尺寸   序号 规模 数据量 爬取速度 第三方库 目的    1 小 小 不敏感 Request库 爬取网页 玩转网页   2 中 中 敏感 Scrapy库 爬取网站 爬取系列网站   3 大 大 非常关键 定制开发 爬取全网 构建搜索引擎   我们平时见到的网络爬虫，小规模的网页爬虫占到了90%以上的比例。 不要看这样的爬虫很小，但是它针对特定网页或一系列的网页，能发挥很大的作用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络爬虫的盗亦有道">
+<meta property="og:url" content="https://gukaifeng.me/2020/03/05/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E7%9A%84%E7%9B%97%E4%BA%A6%E6%9C%89%E9%81%93/index.html">
+<meta property="og:site_name" content="ゆうの あらしこ">
+<meta property="og:description" content="1. 网络爬虫的尺寸   序号 规模 数据量 爬取速度 第三方库 目的    1 小 小 不敏感 Request库 爬取网页 玩转网页   2 中 中 敏感 Scrapy库 爬取网站 爬取系列网站   3 大 大 非常关键 定制开发 爬取全网 构建搜索引擎   我们平时见到的网络爬虫，小规模的网页爬虫占到了90%以上的比例。 不要看这样的爬虫很小，但是它针对特定网页或一系列的网页，能发挥很大的作用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg">
+<meta property="article:published_time" content="2020-03-05T14:46:21.000Z">
+<meta property="article:modified_time" content="2020-03-18T05:36:54.242Z">
+<meta property="article:author" content="顾凯峰">
+<meta property="article:tag" content="爬虫">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://gukaifeng.me/2020/03/05/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E7%9A%84%E7%9B%97%E4%BA%A6%E6%9C%89%E9%81%93/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}
+
+// https://stackoverflow.com/questions/16839698/jquery-getscript-alternative-in-native-javascript
+const getScript = url => new Promise((resolve, reject) => {
+  const script = document.createElement('script')
+  script.src = url
+  script.async = true
+  script.onerror = reject
+  script.onload = script.onreadystatechange = function() {
+    const loadState = this.readyState
+    if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+    script.onload = script.onreadystatechange = null
+    resolve()
+  }
+  document.head.appendChild(script)
+})</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2020-03-18 13:36:54'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/null" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">61</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">46</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div></div><hr/></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">ゆうの あらしこ</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">网络爬虫的盗亦有道</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-03-05T14:46:21.000Z" title="发表于 2020-03-05 22:46:21">2020-03-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2020-03-18T05:36:54.242Z" title="更新于 2020-03-18 13:36:54">2020-03-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Python%E7%88%AC%E8%99%AB/">Python爬虫</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="1-网络爬虫的尺寸"><a href="#1-网络爬虫的尺寸" class="headerlink" title="1. 网络爬虫的尺寸"></a>1. 网络爬虫的尺寸</h2><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>规模</th>
+<th>数据量</th>
+<th>爬取速度</th>
+<th>第三方库</th>
+<th>目的</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>小</td>
+<td>小</td>
+<td>不敏感</td>
+<td>Request库</td>
+<td>爬取网页 玩转网页</td>
+</tr>
+<tr>
+<td>2</td>
+<td>中</td>
+<td>中</td>
+<td>敏感</td>
+<td>Scrapy库</td>
+<td>爬取网站 爬取系列网站</td>
+</tr>
+<tr>
+<td>3</td>
+<td>大</td>
+<td>大</td>
+<td>非常关键</td>
+<td>定制开发</td>
+<td>爬取全网 构建搜索引擎</td>
+</tr>
+</tbody></table>
+<p>我们平时见到的网络爬虫，小规模的网页爬虫占到了90%以上的比例。</p>
+<p>不要看这样的爬虫很小，但是它针对特定网页或一系列的网页，能发挥很大的作用。</p>
+<h2 id="2-网络爬虫引发的问题"><a href="#2-网络爬虫引发的问题" class="headerlink" title="2. 网络爬虫引发的问题"></a>2. 网络爬虫引发的问题</h2><ol>
+<li><strong>骚扰问题</strong>：受限于编写水平和目的，网络爬虫将会为web服务器带来巨大的资源开销。</li>
+<li><strong>法律风险</strong>：服务器上的数据有产权归属，网络爬虫获取数据后牟利将带来法律风险。</li>
+<li><strong>泄露隐私</strong>：网络爬虫可能具备突破简单访问控制的能力，获得被保护数据从而泄露个人隐私。</li>
+</ol>
+<a id="more"></a>
+
+<h2 id="3-网络爬虫的限制"><a href="#3-网络爬虫的限制" class="headerlink" title="3. 网络爬虫的限制"></a>3. 网络爬虫的限制</h2><ol>
+<li><p>来源审查：判断User-Agent进行限制。</p>
+<p> 检查来访HTTP协议头的User-Agent域，只响应浏览器或友好爬虫的访问。</p>
+</li>
+<li><p>发布公告：Robots协议</p>
+<p> 告知所有爬虫网站的爬取策略，要求爬虫遵守。</p>
+</li>
+</ol>
+<p>发布公告仅仅是公告的形式，至于网络爬虫是否遵守，由其自身决定。</p>
+<p>通过上面两个方法，互联网实现了对网络爬虫在技术上和道德上的有效限制。</p>
+<h2 id="4-Robots协议"><a href="#4-Robots协议" class="headerlink" title="4. Robots协议"></a>4. Robots协议</h2><p><strong>Robots Exclusion Standard</strong> 网络爬虫排除标准</p>
+<p>作用：网站告知网络爬虫哪些页面可以抓取，哪些不行。</p>
+<p>形式：在网站根目录下的robots.txt文件。</p>
+<p>案例：京东网站的 <a target="_blank" rel="noopener" href="https://www.jd.com/robots.txt">https://www.jd.com/robots.txt</a> 内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">User-agent: * </span><br><span class="line">Disallow: &#x2F;?* </span><br><span class="line">Disallow: &#x2F;pop&#x2F;*.html </span><br><span class="line">Disallow: &#x2F;pinpai&#x2F;*.html?* </span><br><span class="line">User-agent: EtaoSpider </span><br><span class="line">Disallow: &#x2F; </span><br><span class="line">User-agent: HuihuiSpider </span><br><span class="line">Disallow: &#x2F; </span><br><span class="line">User-agent: GwdangSpider </span><br><span class="line">Disallow: &#x2F; </span><br><span class="line">User-agent: WochachaSpider </span><br><span class="line">Disallow: &#x2F;</span><br></pre></td></tr></table></figure>
+<h3 id="4-1-Robots协议的基本语法"><a href="#4-1-Robots协议的基本语法" class="headerlink" title="4.1 Robots协议的基本语法"></a>4.1 Robots协议的基本语法</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 代表注释，* 代表所有，/ 代表根目录</span></span><br><span class="line">User-agent: * </span><br><span class="line">Disallow: /</span><br></pre></td></tr></table></figure>
+<p><code>User-agent</code>：表示用户。</p>
+<p><code>Disallow</code>：表示不允许此用户访问的目录。</p>
+<p>其他案例：</p>
+<p><a target="_blank" rel="noopener" href="http://www.baidu.com/robots.txt">http://www.baidu.com/robots.txt</a></p>
+<p><a target="_blank" rel="noopener" href="http://news.sina.com.cn/robots.txt">http://news.sina.com.cn/robots.txt</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.qq.com/robots.txt">http://www.qq.com/robots.txt</a></p>
+<p><a target="_blank" rel="noopener" href="http://news.qq.com/robots.txt">http://news.qq.com/robots.txt</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.moe.edu.cn/robots.txt">http://www.moe.edu.cn/robots.txt</a> （无robots协议）</p>
+<p>注：无robots协议意味着此网站允许任何人对其不限制的进行爬虫。</p>
+<h3 id="4-2-Robots协议的使用"><a href="#4-2-Robots协议的使用" class="headerlink" title="4.2 Robots协议的使用"></a>4.2 Robots协议的使用</h3><p>网络爬虫：自动或人工识别robots.txt，再进行内容爬取。</p>
+<p>约束性：Robots协议是建议但非约束性的。网络爬虫可以不遵守，但存在法律风险。</p>
+<h3 id="4-3-对Robots协议的理解"><a href="#4-3-对Robots协议的理解" class="headerlink" title="4.3 对Robots协议的理解"></a>4.3 对Robots协议的理解</h3><p>爬取网页/玩转网页：访问量很小，可以遵守；访问量很大，建议遵守。</p>
+<p>爬取网站/爬取系列网站：非商业且偶尔，建议遵守；商业利益，必须遵守。</p>
+<p>爬取全网：必须遵守。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">顾凯峰</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://gukaifeng.me/2020/03/05/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E7%9A%84%E7%9B%97%E4%BA%A6%E6%9C%89%E9%81%93/">https://gukaifeng.me/2020/03/05/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E7%9A%84%E7%9B%97%E4%BA%A6%E6%9C%89%E9%81%93/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://gukaifeng.me" target="_blank">ゆうの あらしこ</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%88%AC%E8%99%AB/">爬虫</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/03/05/Requests%E5%BA%93%E7%88%AC%E5%8F%96%E5%AE%9E%E4%BE%8B/"><img class="prev-cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Requests库爬取实例</div></div></a></div><div class="next-post pull-right"><a href="/2020/03/05/Requests%E5%BA%93%E5%85%A5%E9%97%A8/"><img class="next-cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Requests库入门</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/03/08/中国大学排名定向爬虫/" title="中国大学排名定向爬虫"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-08</div><div class="title">中国大学排名定向爬虫</div></div></a></div><div><a href="/2020/03/05/Requests库入门/" title="Requests库入门"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-05</div><div class="title">Requests库入门</div></div></a></div><div><a href="/2020/03/05/Requests库爬取实例/" title="Requests库爬取实例"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-05</div><div class="title">Requests库爬取实例</div></div></a></div><div><a href="/2020/03/15/Requests库和Scrapy框架的比较/" title="Requests库和Scrapy框架的比较"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-15</div><div class="title">Requests库和Scrapy框架的比较</div></div></a></div><div><a href="/2020/03/08/基于bs4库的HTML内容查找方法/" title="基于bs4库的HTML内容查找方法"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-08</div><div class="title">基于bs4库的HTML内容查找方法</div></div></a></div><div><a href="/2020/03/07/基于bs4库的HTML格式化和编码/" title="基于bs4库的HTML格式输出和编码"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-07</div><div class="title">基于bs4库的HTML格式输出和编码</div></div></a></div></div></div></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/null" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">顾凯峰</div><div class="author-info__description">行有不得，反求诸己。</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">61</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">46</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E7%9A%84%E5%B0%BA%E5%AF%B8"><span class="toc-number">1.</span> <span class="toc-text">1. 网络爬虫的尺寸</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E5%BC%95%E5%8F%91%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">2. 网络爬虫引发的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E7%9A%84%E9%99%90%E5%88%B6"><span class="toc-number">3.</span> <span class="toc-text">3. 网络爬虫的限制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Robots%E5%8D%8F%E8%AE%AE"><span class="toc-number">4.</span> <span class="toc-text">4. Robots协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-Robots%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 Robots协议的基本语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-Robots%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 Robots协议的使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E5%AF%B9Robots%E5%8D%8F%E8%AE%AE%E7%9A%84%E7%90%86%E8%A7%A3"><span class="toc-number">4.3.</span> <span class="toc-text">4.3 对Robots协议的理解</span></a></li></ol></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2020/04/05/MacOS%E4%B8%8A%E7%9A%84%E5%AE%9E%E7%94%A8%E5%B0%8F%E5%B7%A5%E5%85%B7/" title="MacOS上的实用小工具"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MacOS上的实用小工具"/></a><div class="content"><a class="title" href="/2020/04/05/MacOS%E4%B8%8A%E7%9A%84%E5%AE%9E%E7%94%A8%E5%B0%8F%E5%B7%A5%E5%85%B7/" title="MacOS上的实用小工具">MacOS上的实用小工具</a><time datetime="2020-04-05T14:41:29.000Z" title="发表于 2020-04-05 22:41:29">2020-04-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/03/25/Leetcode%E6%80%9D%E8%B7%AF%E7%AC%94%E8%AE%B0/" title="Leetcode思路笔记"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Leetcode思路笔记"/></a><div class="content"><a class="title" href="/2020/03/25/Leetcode%E6%80%9D%E8%B7%AF%E7%AC%94%E8%AE%B0/" title="Leetcode思路笔记">Leetcode思路笔记</a><time datetime="2020-03-24T16:01:20.000Z" title="发表于 2020-03-25 00:01:20">2020-03-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/03/21/Java%E4%B8%ADfor%E5%BE%AA%E7%8E%AF%E5%86%85%E7%9A%84-i%E4%B8%8Ei-%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94/" title="Java中for循环内的++i与i++性能对比"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java中for循环内的++i与i++性能对比"/></a><div class="content"><a class="title" href="/2020/03/21/Java%E4%B8%ADfor%E5%BE%AA%E7%8E%AF%E5%86%85%E7%9A%84-i%E4%B8%8Ei-%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94/" title="Java中for循环内的++i与i++性能对比">Java中for循环内的++i与i++性能对比</a><time datetime="2020-03-21T13:43:30.000Z" title="发表于 2020-03-21 21:43:30">2020-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/03/21/Java-JCF%E4%B8%AD%E7%9A%84%E5%B7%A5%E5%85%B7%E7%B1%BB/" title="Java JCF中的工具类"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java JCF中的工具类"/></a><div class="content"><a class="title" href="/2020/03/21/Java-JCF%E4%B8%AD%E7%9A%84%E5%B7%A5%E5%85%B7%E7%B1%BB/" title="Java JCF中的工具类">Java JCF中的工具类</a><time datetime="2020-03-21T06:48:33.000Z" title="发表于 2020-03-21 14:48:33">2020-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/03/20/Java%E6%98%A0%E5%B0%84Map%E7%B1%BB/" title="Java映射Map类"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java映射Map类"/></a><div class="content"><a class="title" href="/2020/03/20/Java%E6%98%A0%E5%B0%84Map%E7%B1%BB/" title="Java映射Map类">Java映射Map类</a><time datetime="2020-03-20T11:17:22.000Z" title="发表于 2020-03-20 19:17:22">2020-03-20</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 By 顾凯峰</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
