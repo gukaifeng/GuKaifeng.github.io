@@ -112,3 +112,8 @@ img {
 .framework-info {
     display: none;
 }
+
+/* 把背景改成白色，避免刚打开网页的时候闪一下蓝色 */
+body {
+    background-color: white;
+}
