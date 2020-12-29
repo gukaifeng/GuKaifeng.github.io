@@ -106,3 +106,9 @@ img {
 .pagination-post {
     display: none;
 }
+
+/* 隐藏底部的hexo驱动和主题 */
+
+.framework-info {
+    display: none;
+}
