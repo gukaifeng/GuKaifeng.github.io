@@ -11,7 +11,7 @@
   algolia: {"appId":"NJKGKBCOFC","apiKey":"05cbbebf02440c4bb8fd59255717595b","indexName":"Hexo algolia search","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
   localSearch: undefined,
   translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
-  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"请注意，这篇文章距离上次更新已经过去","messageNext":"天了，内容可能会有些过时。"},
   highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
   copy: {
     success: '复制成功',
@@ -95,7 +95,7 @@ const getScript = url => new Promise((resolve, reject) => {
   isHome: false,
   isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2020-12-29 23:11:28'
+  postUpdate: '2020-12-30 11:23:42'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
