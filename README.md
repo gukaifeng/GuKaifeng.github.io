@@ -1,1 +1,1 @@
-本站已移至 gukaifeng.cn。
+本站已移至 gukaifeng.cn(https://gukaifeng.cn/)。
